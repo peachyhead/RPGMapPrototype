@@ -374,7 +374,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1600, y: 900}
   m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -724,11 +724,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4104388206277208293}
     m_Modifications:
-    - target: {fileID: 215314952330605827, guid: 03062badfa8854814a4dec14ce37a1aa,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1116173796370669844, guid: 03062badfa8854814a4dec14ce37a1aa,
         type: 3}
       propertyPath: m_Name

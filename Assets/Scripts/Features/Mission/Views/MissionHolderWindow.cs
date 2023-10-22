@@ -12,6 +12,7 @@ namespace Features.Mission.Views
     public class MissionHolderWindow : BaseMissionWindow
     {
         [SerializeField] private Transform _layoutHolder; 
+        
         private List<BaseMissionWindow> _missionWindows = new ();
         
         [Inject]
@@ -29,6 +30,7 @@ namespace Features.Mission.Views
             {
                 missionWindow.Show();
                 missionWindow.transform.SetParent(_layoutHolder);
+                missionWindow.transform.localScale = Vector3.one;
             }
         }
 

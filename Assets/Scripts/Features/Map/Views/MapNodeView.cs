@@ -41,17 +41,16 @@ namespace Features.Map.Views
                 .OnValueChangedAsObservable()
                 .Select(status => status)
                 .Where(status => status)
-                .Subscribe(_ => _signalBus.TryFire(new MapSignals.SelectNode(_nodeModel.NodeID.Node)))
+                .Subscribe(_ => _signalBus.TryFire(new MapSignals
+                    .SelectNode(_nodeModel.NodeID.Node)))
                 .AddTo(this);
 
             _nodeModel
                 .OnShowStatusChange()
                 .Subscribe(status =>
                 {
-                    if (status)
-                        Show();
-                    else
-                        Hide();
+                    if (status) Show();
+                    else Hide();
                 })
                 .AddTo(this);
 
@@ -59,10 +58,8 @@ namespace Features.Map.Views
                 .OnLockStatusChange()
                 .Subscribe(status =>
                 {
-                    if (status)
-                        Unlock();
-                    else
-                        Lock();
+                    if (status) Unlock();
+                    else Lock();
                 })
                 .AddTo(this);
         }
@@ -90,11 +87,6 @@ namespace Features.Map.Views
         public void SetToggleGroup(ToggleGroup group)
         {
             _toggle.group = group;
-        }
-
-        public void SetTargetGraphic(Image graphic)
-        {
-            _toggle.graphic = graphic;
         }
 
         public RectTransform GetRectTransform() => _rectTransform;

@@ -56,6 +56,7 @@ namespace Features.Mission.Installers
             BindStateWithID<LockedMissionState>(MissionStateType.Locked);
             BindStateWithID<TemporaryLockedMissionState>(MissionStateType.TemporaryLocked);
             BindStateWithID<CompletedMissionState>(MissionStateType.Completed);
+            BindStateWithID<AbandonedMissionState>(MissionStateType.Abandoned);
         }
 
         private void InstallRules()

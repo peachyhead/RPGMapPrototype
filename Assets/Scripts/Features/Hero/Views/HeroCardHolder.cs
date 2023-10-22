@@ -4,9 +4,6 @@
 // [2020]-[2023].
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Features.Hero.Data;
 using Features.Hero.Signals;
@@ -76,13 +73,14 @@ namespace Features.Hero.Views
             cardView.SetToggleGroup(_toggleGroup);
             cardView.SelectionToggle.interactable = _groupState;
             cardView.transform.SetParent(_layout.transform);
+            
             _toggleMap.Add(cardView.SelectionToggle, cardView);
             _selectionStream?.Dispose();
             _selectionStream = AssembleSelection()
                 .Subscribe(heroType => _signalBus
                     .TryFire(new HeroSignals.SelectHero(heroType)));
         }
-
+        
         private IObservable<HeroType> AssembleSelection()
         {
             var selectionObservable = Observable.Empty<HeroType>();

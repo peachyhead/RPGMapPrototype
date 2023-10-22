@@ -36,15 +36,11 @@ namespace Features.Mission.Views
 
         public override async void Show()
         {
-            base.Show();
-
+            base.Show(); 
+            DisplayData();
+            
             var couldBeStarted = false;
-            _nameField.text = $"{_model.Data.Name}";
-            _cover.sprite = _model.Data.Cover;
-            _descriptionField.text = $"{_model.Data.Description}";
-            _buttonTitleField.text = $"{MissionConsts.NeedToSelectHeroMessage}";
-            transform.localScale = Vector3.one;
-            _startButton.interactable = false;
+            RectTransform.anchoredPosition = Vector2.zero;           
 
             _signalBus
                 .GetStream<HeroSignals.SelectHero>()
@@ -64,6 +60,15 @@ namespace Features.Mission.Views
             _buttonTitleField.text = completed 
                 ? $"{MissionConsts.MissionCompletedMessage}" 
                 : $"{MissionConsts.MissionAcceptMessage}";
+        }
+
+        private void DisplayData()
+        {
+            _nameField.text = $"{_model.Data.Name}";
+            _cover.sprite = _model.Data.Cover;
+            _descriptionField.text = $"{_model.Data.Description}";
+            _buttonTitleField.text = $"{MissionConsts.NeedToSelectHeroMessage}";
+            _startButton.interactable = false;
         }
 
         public override void Close()

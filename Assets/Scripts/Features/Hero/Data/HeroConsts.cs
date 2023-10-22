@@ -9,7 +9,7 @@ namespace Features.Hero.Data
     {
         public static readonly string HeroCardPrefab = "Prefabs/Hero/HeroCardView";
 
-        public static readonly int HolderAppearRegion = 125;
-        public static readonly int HolderDisappearRegion = -125;
+        public static readonly int HolderAppearRegion = 150;
+        public static readonly int HolderDisappearRegion = -150;
     }
 }

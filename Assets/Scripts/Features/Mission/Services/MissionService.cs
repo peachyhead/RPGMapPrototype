@@ -71,6 +71,14 @@ namespace Features.Mission.Services
             model.SetState(MissionStateType.Completed);
             if (_currentWindow != null) 
                 _currentWindow.Close();
+
+            if (!_missionRegistry.TryGetNodeByName(model.Data.Name, out var node)) 
+                return;
+            if (!_missionModelStorage.TryGetMissionsByNode(node.Node, out var missions)) 
+                return;
+            
+            foreach (var abandonedMission in missions) 
+                abandonedMission.SetState(MissionStateType.Abandoned);
         }
         
         public bool TrySetupMission(MapNodeID nodeID, out MissionModel model)
@@ -89,7 +97,9 @@ namespace Features.Mission.Services
 
         public void TryUnlockMission(MissionModel missionModel)
         {
-            if (missionModel.CurrentState == MissionStateType.Completed)
+            if (missionModel.CurrentState 
+                is MissionStateType.Completed 
+                or MissionStateType.Abandoned)
                 return;
             
             if (!missionModel.Data.RequiredMissions.Any())

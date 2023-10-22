@@ -10,6 +10,7 @@ namespace Features.Mission.Data
         Active,
         Locked,
         TemporaryLocked,
-        Completed
+        Completed,
+        Abandoned
     }
 }

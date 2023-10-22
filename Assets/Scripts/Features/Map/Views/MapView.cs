@@ -12,6 +12,6 @@ namespace Features.Map.Views
     {
         [SerializeField] private ToggleGroup _toggleGroup;
 
-        public ToggleGroup GetToggleGroup => _toggleGroup;
+        public ToggleGroup ToggleGroup => _toggleGroup;
     }
 }

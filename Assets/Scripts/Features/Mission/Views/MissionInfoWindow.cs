@@ -3,7 +3,10 @@
 // All Rights Reserved
 // [2020]-[2023].
 
+using Cysharp.Threading.Tasks;
+using Features.Hero.Signals;
 using Features.Mission.Data;
+using Features.Mission.Models;
 using Features.Mission.Signals;
 using TMPro;
 using UniRx;
@@ -15,31 +18,52 @@ namespace Features.Mission.Views
 {
     public class MissionInfoWindow : BaseMissionWindow
     {
-        [SerializeField] private TMP_Text _nameField;
         [SerializeField] private Image _cover;
+        [SerializeField] private TMP_Text _nameField;
         [SerializeField] private TMP_Text _descriptionField;
         [SerializeField] private Button _startButton;
+        [SerializeField] private TMP_Text _buttonTitleField;
 
-        private MissionData _data;
+        private MissionModel _model;
         private SignalBus _signalBus;
 
         [Inject]
-        public void Construct(MissionData data, SignalBus signalBus)
+        public void Construct(MissionModel model, SignalBus signalBus)
         {
-            _data = data;
+            _model = model;
             _signalBus = signalBus;
         }
 
-        public override void Show()
+        public override async void Show()
         {
-            _nameField.text = $"{_data.Name}";
-            _cover.sprite = _data.Cover;
-            _descriptionField.text = $"{_data.Description}";
-            
+            base.Show();
+
+            var couldBeStarted = false;
+            _nameField.text = $"{_model.Data.Name}";
+            _cover.sprite = _model.Data.Cover;
+            _descriptionField.text = $"{_model.Data.Description}";
+            _buttonTitleField.text = $"{MissionConsts.NeedToSelectHeroMessage}";
+            transform.localScale = Vector3.one;
+            _startButton.interactable = false;
+
+            _signalBus
+                .GetStream<HeroSignals.SelectHero>()
+                .Subscribe(_ => couldBeStarted = true)
+                .AddTo(this);
+
             _startButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _signalBus.TryFire(new MissionSignals.StartMission(_data.Name)))
+                .Subscribe(_ => _signalBus.TryFire(new MissionSignals.StartMission(_model.ID)))
                 .AddTo(this);
+
+            await UniTask.WaitUntil(() => couldBeStarted);
+
+            var completed = _model.CurrentState == MissionStateType.Completed;
+            
+            _startButton.interactable = !completed;
+            _buttonTitleField.text = completed 
+                ? $"{MissionConsts.MissionCompletedMessage}" 
+                : $"{MissionConsts.MissionAcceptMessage}";
         }
 
         public override void Close()

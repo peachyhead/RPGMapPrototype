@@ -3,8 +3,6 @@
 // All Rights Reserved
 // [2020]-[2023].
 
-using Features.Map.Data;
-
 namespace Features.Mission.Signals
 {
     public sealed class MissionSignals

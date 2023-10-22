@@ -9,6 +9,8 @@ using Features.Map.Models;
 using Features.Map.Services;
 using Features.Map.Signals;
 using Features.Map.Storages;
+using Features.Mission.Models;
+using UnityEngine;
 using Zenject;
 
 namespace Features.Map.Installers
@@ -31,8 +33,8 @@ namespace Features.Map.Installers
             Container.Bind<MapNodePresenterFactory>()
                 .AsSingle()
                 .WhenInjectedInto<MapNodeViewContainer>();;
-            Container.BindFactory<MapNodeData, MapNodeModel, MapNodeModelFactory>()
-                .WhenInjectedInto<MapNodeModelStorage>();
+            
+            Container.BindFactory<MapNodeID, Vector2, MissionModel, MapNodeModel, MapNodeModelFactory>();
         }
 
         private void InstallServices()

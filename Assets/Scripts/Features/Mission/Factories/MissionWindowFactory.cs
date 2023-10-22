@@ -5,13 +5,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Features.Mission.Data;
+using Features.Mission.Models;
 using Features.Mission.Views;
 using Zenject;
 
 namespace Features.Mission.Factories
 {
-    public class MissionWindowFactory : IFactory<List<MissionData>, BaseMissionWindow>
+    public class MissionWindowFactory : IFactory<List<MissionModel>, BaseMissionWindow>
     {
         private readonly MissionInfoWindowFactory _missionInfoFactory;
         private readonly MissionInfoHolderWindowFactory _missionInfoHolderFactory;
@@ -23,12 +23,9 @@ namespace Features.Mission.Factories
             _missionInfoHolderFactory = missionInfoHolderFactory;
         }
         
-        public BaseMissionWindow Create(List<MissionData> data)
+        public BaseMissionWindow Create(List<MissionModel> model)
         {
-            if (data.Count <= 1) return 
-                _missionInfoFactory.Create(data.First());
-            
-            var windows = data
+            var windows = model
                 .Select(item => _missionInfoFactory.Create(item))
                 .ToList();
 

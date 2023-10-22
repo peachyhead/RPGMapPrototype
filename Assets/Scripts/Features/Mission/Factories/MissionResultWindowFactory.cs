@@ -5,12 +5,13 @@
 
 using Features.Mission.Data;
 using Features.Mission.Data.Config;
+using Features.Mission.Models;
 using Features.Mission.Views;
 using Zenject;
 
 namespace Features.Mission.Factories
 {
-    public class MissionResultWindowFactory : IFactory<MissionData, MissionResultWindow>
+    public class MissionResultWindowFactory : IFactory<MissionModel, MissionResultWindow>
     {
         private readonly DiContainer _container;
 
@@ -21,10 +22,10 @@ namespace Features.Mission.Factories
             _container = container;
         }
         
-        public MissionResultWindow Create(MissionData data)
+        public MissionResultWindow Create(MissionModel model)
         {
             return _container.InstantiatePrefabResourceForComponent<MissionResultWindow>(MissionConsts
-                .MissionResultWindow, new object[] { data });
+                .MissionResultWindow, new object[] { model });
         }
     }
 }

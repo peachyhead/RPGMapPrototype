@@ -6,11 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Features.Map.Data;
 using Features.Map.Factories;
 using Features.Map.Models;
 using Features.Map.Views;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -18,7 +16,7 @@ namespace Features.Map.Storages
 {
     public class MapNodeViewContainer : IInitializable, IDisposable
     {
-        private readonly Dictionary<MapNodeHolder, List<MapNodeView>> _items = new ();
+        private readonly Dictionary<MapNodeView, MapNodeHolder> _items = new ();
 
         private readonly MapNodeModelStorage _modelStorage;
         private readonly MapNodePresenterFactory _presenterFactory;
@@ -41,38 +39,36 @@ namespace Features.Map.Storages
         
         public void Initialize()
         {
-            foreach (var model in _modelStorage.GetItems) 
+            foreach (var model in _modelStorage) 
                 SetupView(model);
-
-            _creationStream = _modelStorage
-                .OnItemAdded()
-                .Subscribe(SetupView);
         }
 
-        private void SetupView(MapNodeModel model)
+        private void SetupView(MapNodeModel mapNodeModel)
         {
-            var holder = _holderFactory.Create(model.Data.ID, model.Position);
-            holder.transform.SetParent(_mapView.transform);
-            holder.SetToggleGroup(_mapView.GetToggleGroup);
+            var commonNode = _items.Keys.FirstOrDefault(item => 
+                item.ID.Node == mapNodeModel.NodeID.Node);
+
+            var nodeHolder = commonNode != null 
+                ? _items[commonNode] 
+                : CreateHolder(mapNodeModel.Position);
             
-            var presenterCollection = model.Data.Subnodes.Any()
-                ? model.Data.Subnodes
-                    .Select(subnode => new MapNodeID(model.Data.ID, subnode))
-                    .Select(nodeID => CreateView(nodeID, holder.LayoutRoot))
-                    .ToList()
-                : new List<MapNodeView>
-                {
-                    CreateView(new MapNodeID(model.Data.ID), holder.LayoutRoot)
-                };
-
-            _items.Add(holder, presenterCollection);
+            var view = CreateView(mapNodeModel, nodeHolder);
+            _items.Add(view, nodeHolder);
         }
 
-        private MapNodeView CreateView(MapNodeID nodeID, Transform parent)
+        private MapNodeView CreateView(MapNodeModel nodeModel, MapNodeHolder holder)
         {
-            var presenter = _presenterFactory.Create(nodeID.ToString());
-            presenter.transform.SetParent(parent);
+            var presenter = _presenterFactory.Create(nodeModel);
+            presenter.SetToggleGroup(_mapView.ToggleGroup);
+            holder.AddNode(presenter);
             return presenter;
+        }
+
+        private MapNodeHolder CreateHolder(Vector2 position)
+        {
+            var holder = _holderFactory.Create(position);
+            holder.transform.SetParent(_mapView.transform);
+            return holder;
         }
 
         public void Dispose()

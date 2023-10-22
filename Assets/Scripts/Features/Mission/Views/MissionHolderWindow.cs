@@ -12,7 +12,7 @@ namespace Features.Mission.Views
     public class MissionHolderWindow : BaseMissionWindow
     {
         [SerializeField] private Transform _layoutHolder; 
-        private List<BaseMissionWindow> _missionWindows;
+        private List<BaseMissionWindow> _missionWindows = new ();
         
         [Inject]
         public void Construct(List<BaseMissionWindow> missionWindows)
@@ -22,6 +22,9 @@ namespace Features.Mission.Views
 
         public override void Show()
         {
+            base.Show();
+            RectTransform.sizeDelta = new Vector2(0, Screen.height);
+            
             foreach (var missionWindow in _missionWindows)
             {
                 missionWindow.Show();

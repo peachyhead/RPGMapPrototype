@@ -3,41 +3,29 @@
 // All Rights Reserved
 // [2020]-[2023].
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Features.Map.Data;
-using Features.Map.Factories;
 using Features.Map.Models;
-using UniRx;
 
 namespace Features.Map.Storages
 {
-    public class MapNodeModelStorage
+    public class MapNodeModelStorage : IEnumerable<MapNodeModel>
     {
-        private readonly ReactiveCollection<MapNodeModel> _items = new ();
+        private readonly List<MapNodeModel> _items = new ();
 
-        private readonly MapNodeModelFactory _modelFactory;
-
-        private MapNodeModelStorage(MapNodeModelFactory modelFactory)
+        public void AddItem(MapNodeModel model)
         {
-            _modelFactory = modelFactory;
-        }
-
-        public MapNodeModel GetNewModel(MapNodeData data)
-        {
-            var model = _modelFactory.Create(data);
             _items.Add(model);
-            return model;
         }
 
-        public IObservable<MapNodeModel> OnItemAdded()
+        public IEnumerator<MapNodeModel> GetEnumerator()
         {
-            return _items.ObserveAdd()
-                .Select(action => action.Value)
-                .AsObservable();
+            return _items.GetEnumerator();
         }
 
-        public List<MapNodeModel> GetItems => _items.ToList();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

@@ -4,14 +4,13 @@
 // [2020]-[2023].
 
 using Features.Map.Data;
-using Features.Map.Utils;
 using Features.Map.Views;
 using UnityEngine;
 using Zenject;
 
 namespace Features.Map.Factories
 {
-    public class MapNodeHolderFactory : IFactory<int, Vector2, MapNodeHolder>
+    public class MapNodeHolderFactory : IFactory<Vector2, MapNodeHolder>
     {
         private readonly DiContainer _container;
 
@@ -20,10 +19,10 @@ namespace Features.Map.Factories
             _container = container;
         }
 
-        public MapNodeHolder Create(int node, Vector2 position)
+        public MapNodeHolder Create(Vector2 position)
         { 
-            return _container.InstantiatePrefabResourceForComponent
-                <MapNodeHolder>(MapConsts.NodeHolderPrefab, new object[] { node, position });
+            return _container.InstantiatePrefabResourceForComponent<MapNodeHolder>(
+                MapConsts.NodeHolderPrefab, new object[] { position });
         }
     }
 }

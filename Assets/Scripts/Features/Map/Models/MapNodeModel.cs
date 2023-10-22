@@ -3,7 +3,9 @@
 // All Rights Reserved
 // [2020]-[2023].
 
+using System;
 using Features.Map.Data;
+using Features.Mission.Models;
 using UnityEngine;
 
 namespace Features.Map.Models
@@ -12,12 +14,21 @@ namespace Features.Map.Models
     {
         public Vector2 Position { get; }
 
-        public MapNodeData Data { get; }
+        public MapNodeID NodeID { get; }
 
-        private MapNodeModel(MapNodeData data)
+        private readonly MissionModel _missionModel;
+
+        private MapNodeModel(MapNodeID nodeID, Vector2 position, MissionModel missionModel)
         {
-            Data = data;
-            Position = data.Position;
+            NodeID = nodeID;
+            Position = position;
+            _missionModel = missionModel;
         }
+
+        public IObservable<bool> OnShowStatusChange() => _missionModel?
+            .OnShowStatusChange();
+        
+        public IObservable<bool> OnLockStatusChange() => _missionModel?
+            .OnAvailabilityStatusChange();
     }
 }

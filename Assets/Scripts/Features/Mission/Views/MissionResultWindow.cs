@@ -3,8 +3,10 @@
 // All Rights Reserved
 // [2020]-[2023].
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using Features.Mission.Data;
+using Features.Mission.Models;
 using Features.Mission.Signals;
 using TMPro;
 using UniRx;
@@ -22,30 +24,44 @@ namespace Features.Mission.Views
         [SerializeField] private TMP_Text _alliesField;
         [SerializeField] private TMP_Text _opponentsField;
         [SerializeField] private Button _completeButton;
+        [SerializeField] private TMP_Text _buttonTitleField;
 
-        private MissionData _data;
-
+        private MissionModel _model;
         private SignalBus _signalBus;
 
         [Inject]
-        public void Construct(MissionData data, SignalBus signalBus)
+        public void Construct(MissionModel data, SignalBus signalBus)
         {
-            _data = data;
+            _model = data;
             _signalBus = signalBus;
         }
 
         public override void Show()
         {
-            _nameField.text = $"{_data.Name}";
-            _cover.sprite = _data.Cover;
-            _storyField.text = $"{_data.MissionStory}";
-
+            base.Show();
+            _nameField.text = $"{_model.Data.Name}";
+            _cover.sprite = _model.Data.Cover;
+            _storyField.text = $"{_model.Data.MissionStory}";
+            _buttonTitleField.text = $"{MissionConsts.MissionBeginMessage}";
+            
+            var alliesAssembled = AssembleTeamLine(_model.Data.Allies);
+            var opponentsAssembled = AssembleTeamLine(_model.Data.Opponents);
+            
+            _alliesField.text = $"{alliesAssembled}";
+            _opponentsField.text = $"{opponentsAssembled}";
+            
             _completeButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _signalBus.TryFire(new MissionSignals.CompleteMission(_data.Name)))
+                .Subscribe(_ => _signalBus.TryFire(new MissionSignals.CompleteMission(_model.ID)))
                 .AddTo(this);
         }
 
+        public string AssembleTeamLine(List<string> targetList)
+        {
+            return targetList.Skip(1).Aggregate(targetList.First(),
+                (current, member) => current + ", " + member);
+        }
+        
         public override void Close()
         {
             Destroy(gameObject);

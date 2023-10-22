@@ -11,9 +11,9 @@ namespace Features.Map.Signals
     {
         public class SelectNode
         {
-            public int Node { get; }
+            public uint Node { get; }
 
-            public SelectNode(int node)
+            public SelectNode(uint node)
             {
                 Node = node;
             }

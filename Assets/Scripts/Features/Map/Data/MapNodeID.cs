@@ -11,14 +11,19 @@ namespace Features.Map.Data
     [Serializable]
     public struct MapNodeID
     {
-        [Min(1)]
-        [SerializeField] private int _node;
-        [SerializeField] private int _subnode;
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_node, _subnode);
+        }
 
-        public int Node => _node;
-        public int Subnode => _subnode;
+        [Min(1)]
+        [SerializeField] private uint _node;
+        [SerializeField] private uint _subnode;
+
+        public uint Node => _node;
+        public uint Subnode => _subnode;
         
-        public MapNodeID(int node, int subnode = default)
+        public MapNodeID(uint node, uint subnode = default)
         {
             _node = node;
             _subnode = subnode;
@@ -29,6 +34,26 @@ namespace Features.Map.Data
             return _subnode == default 
                 ? $"{_node}" 
                 : $"{_node}{MapConsts.NodeSplitSymbol}{_subnode}";
+        }
+        
+        public static bool operator ==(MapNodeID nodeA, MapNodeID nodeB)
+        {
+            return nodeA.ToString() == nodeB.ToString();
+        }
+
+        public static bool operator !=(MapNodeID nodeA, MapNodeID nodeB)
+        {
+            return !(nodeA == nodeB);
+        }
+        
+        public bool Equals(MapNodeID other)
+        {
+            return _node == other._node && _subnode == other._subnode;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is MapNodeID other && Equals(other);
         }
     }
 }

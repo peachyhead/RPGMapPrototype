@@ -13,13 +13,13 @@ namespace Features.Map.Data
     public class MapNodeData
     {
         [Min(1)]
-        [SerializeField] private int _id;
+        [SerializeField] private uint _id;
         [SerializeField] private Vector2 _position;
         [Min(1)]
-        [SerializeField] private List<int> _subnodes;
+        [SerializeField] private List<uint> _subnodes;
 
-        public int ID => _id;
+        public uint ID => _id;
         public Vector2 Position => _position;
-        public List<int> Subnodes => _subnodes;
+        public List<uint> Subnodes => _subnodes;
     }
 }

@@ -20,10 +20,10 @@ namespace Features.Mission.Factories
             _container = container;
         }
         
-        public BaseMissionWindow Create(List<BaseMissionWindow> windows)
+        public BaseMissionWindow Create(List<BaseMissionWindow> model)
         {
             return _container.InstantiatePrefabResourceForComponent
-                <MissionHolderWindow>(MissionConsts.MissionInfoHolderWindow, new object[] { windows });
+                <MissionHolderWindow>(MissionConsts.MissionInfoHolderWindow, new object[] { model });
         }
     }
 }
